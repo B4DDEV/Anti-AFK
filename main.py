@@ -84,8 +84,6 @@ class worker:
 
 
     def single(self):
-        print("single")
-        print(key)
         time.sleep(timeout)
         pydirectinput.press(key[0])
         
