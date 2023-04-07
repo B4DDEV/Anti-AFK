@@ -1,4 +1,4 @@
-import pydirectinput, time, fade, os
+import pydirectinput, time, fade, os, ctypes
 import threading as th
 
 keep_going = True
@@ -37,6 +37,7 @@ class Main:
 
     def start(self):
         global timeout
+
         valid_input = ["Key", "key", "Pattern", "pattern"]
         while True:
             self.keyorpatern = input("[!] - Single Key or Pattern (Key/Pattern) : ")
@@ -91,10 +92,16 @@ class worker:
     
     def patern(self):
         for i in partner:
+
             time.sleep(timeout)
             pydirectinput.press(i)
             
-
+def title():
+    while True:
+        end_time = time.perf_counter()
+        elapsed_time = end_time - start_time
+        ctypes.windll.kernel32.SetConsoleTitleW("Anti-AFK | Time : {} seconds".format(round(elapsed_time, 0)))    
+        time.sleep(1)
 
 def key_capture():
     global keep_going
@@ -104,13 +111,19 @@ def key_capture():
 
 def threadfonc():
     th.Thread(target=key_capture, args=(), name='key_capture', daemon=True).start()
+    th.Thread(target=title, args=(), name='title', daemon=True).start()
+    
     while keep_going:
+        
         if keep_going == False:
             break
         else:
+            
             if mainobject.tern == True:
+                
                 secondobject.patern()
             elif mainobject.ke == True:
+                
                 secondobject.single()
 
 
@@ -120,5 +133,6 @@ if __name__ == "__main__":
     mainobject.start()
     secondobject.waiting()
     mainobject.console()
+    start_time = time.perf_counter()
     threadfonc()
 
